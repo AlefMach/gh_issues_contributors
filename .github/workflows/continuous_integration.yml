@@ -1,4 +1,4 @@
-name: CI for Elixir App
+name: CI for gh_issues_contributors
 
 on:
   push:
