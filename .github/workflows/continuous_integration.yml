@@ -46,7 +46,7 @@ jobs:
 
       - name: Save logs on failure
         if: failure()
-        run: docker logs sysaud_backend_test
+        run: docker logs gh_issues_contributors_backend_test
         
       # Limpeza de containers
       - name: Cleanup
