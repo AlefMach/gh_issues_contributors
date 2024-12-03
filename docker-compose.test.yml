@@ -1,5 +1,5 @@
 services:
-  sysaud_backend_test:
+  gh_issues_contributors_backend_test:
     build:
       context: .
       dockerfile: Dockerfile.test
