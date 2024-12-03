@@ -5,8 +5,34 @@ defmodule GhIssuesContributorsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", GhIssuesContributorsWeb do
+  pipeline :browser do
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:protect_from_forgery)
+  end
+
+  pipeline :api_swagger do
+    plug(:accepts, ["json"])
+    plug(OpenApiSpex.Plug.PutApiSpec, module: GhIssuesContributorsWeb.Swagger.ApiSpec)
+  end
+
+  scope "/api/v1", GhIssuesContributorsWeb do
     pipe_through :api
+
+    get("/github/:owner/:repo", IssuesController, :index)
+  end
+
+  scope "/openapi" do
+    pipe_through(:api_swagger)
+
+    get("/", OpenApiSpex.Plug.RenderSpec, [])
+  end
+
+  scope "/" do
+    pipe_through(:browser)
+
+    get("/health-check", GhIssuesContributorsWeb.HealthCheckController, :check)
+    get("/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/openapi")
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
