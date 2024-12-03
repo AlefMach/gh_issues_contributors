@@ -1,0 +1,24 @@
+# Etapa de build
+FROM bitwalker/alpine-elixir:1.16
+
+# Configuração de timezone
+ENV TZ=America/Sao_Paulo
+RUN apk add --no-cache \
+    tzdata ncurses-libs postgresql-client build-base \
+    && cp /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+WORKDIR /app
+
+# Configurar o ambiente Mix
+ENV MIX_ENV=test
+
+RUN mix do local.hex --force, local.rebar --force
+
+# Copiar arquivos essenciais para instalar dependências
+COPY . ./
+
+RUN mix do deps.get, deps.compile, compile --warnings-as-errors
+
+# Etapa final
+CMD ["sh", "-c", "mix deps.get && mix test"]

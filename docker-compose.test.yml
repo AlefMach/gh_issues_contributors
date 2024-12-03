@@ -1,0 +1,15 @@
+services:
+  gh_issues_contributors_backend_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      args:
+        MIX_ENV: ${MIX_ENV}
+    environment:
+      MIX_ENV: test
+    env_file:
+      - .env.test
+    volumes:
+      - .:/app
+    command: >
+      sh -c "mix deps.get && mix test --trace" 
