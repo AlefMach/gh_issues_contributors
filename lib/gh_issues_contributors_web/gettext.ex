@@ -20,5 +20,5 @@ defmodule GhIssuesContributorsWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :gh_issues_contributors
+  use Gettext.Backend, otp_app: :gh_issues_contributors
 end

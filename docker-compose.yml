@@ -1,0 +1,23 @@
+services:
+  gh_issues_contributors:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      target: build
+      args:
+        MIX_ENV: prod
+    container_name: gh_issues_contributors
+    command: iex -S mix phx.server
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
