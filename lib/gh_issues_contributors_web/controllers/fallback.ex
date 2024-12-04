@@ -3,6 +3,8 @@ defmodule GhIssuesContributorsWeb.Fallback do
 
   use GhIssuesContributorsWeb, :controller
 
+  use Gettext, backend: GhIssuesContributorsWeb.Gettext
+
   alias GhIssuesContributorsWeb.ErrorView
 
   def call(conn, nil) do
