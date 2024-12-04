@@ -5,6 +5,10 @@ defmodule GhIssuesContributors.Adapters.Github.Service do
   @github_api_url "https://api.github.com/repos"
   @github_token System.get_env("GITHUB_TOKEN")
 
+  @spec fetch_issues_and_contributors(any(), any()) ::
+          {:error, <<_::64, _::_*8>>}
+          | {:ok,
+             %{contributors: list() | {:error, <<_::224>>}, issues: list() | {:error, <<_::176>>}}}
   @doc """
   Busca as issues e os contribuidores de um repositório no GitHub, filtrando as issues
   criadas nas últimas 24 horas e os contribuidores que realizaram commits nesse intervalo.
