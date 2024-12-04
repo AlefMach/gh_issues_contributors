@@ -4,6 +4,7 @@ defmodule GhIssuesContributorsWeb.IssuesController do
 
   alias GhIssuesContributorsWeb.Swagger.Schemas.GhIssuesContributorsSchema
   alias GhIssuesContributorsWeb.Swagger.Response
+  alias GhIssuesContributorsWeb.Utils
 
   action_fallback(GhIssuesContributorsWeb.Fallback)
 
@@ -49,8 +50,7 @@ defmodule GhIssuesContributorsWeb.IssuesController do
       ] ++ Response.errors([:unauthorized])
   )
   def index(conn, %{"owner" => _owner, "repo" => _repo}) do
-    # Implementação futura do serviço de busca de issues e contribuidores.
-    # Esta função deve chamar um serviço que utiliza a API do GitHub.
+    RememberMe.guard(Utils.cache_key(conn), %{teste: "ok"}, min: 10)
     json(conn, %{message: "Not implemented yet"})
   end
 end
