@@ -17,6 +17,7 @@ defmodule GhIssuesContributorsWeb.Plugs.Cache do
   import Plug.Conn
   alias GhIssuesContributorsWeb.Utils
   alias Jason
+  alias GhIssuesContributors.Adapters.WebhookSite.Service, as: Webhook
   require Logger
 
   @spec init(any()) :: any()
@@ -49,18 +50,14 @@ defmodule GhIssuesContributorsWeb.Plugs.Cache do
         Logger.info("[Plugs.Cache] Cache miss for key: #{cache_key}")
         conn
 
-      data ->
+      %{data: data, message: message, id_webhook: id_webhook} ->
         Logger.info("[Plugs.Cache] Cache hit for key: #{cache_key}. Returning cached response.")
-        serialized_data = serialize(data)
+
+        Task.start(fn -> Webhook.send_webhook_response(id_webhook, data, message) end)
 
         conn
-        |> put_resp_content_type("application/json")
-        |> send_resp(200, serialized_data)
+        |> send_resp(202, "Processing started")
         |> halt()
     end
   end
-
-  defp serialize(data) when is_map(data) or is_list(data), do: Jason.encode!(data)
-  defp serialize(data) when is_binary(data), do: data
-  defp serialize(data), do: to_string(data)
 end

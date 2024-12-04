@@ -4,9 +4,8 @@ defmodule GhIssuesContributorsWeb.IssuesController do
 
   alias GhIssuesContributorsWeb.Swagger.Schemas.GhIssuesContributorsSchema
   alias GhIssuesContributorsWeb.Swagger.Response
+  alias GhIssuesContributors.Domain.ProcessRequest
   alias GhIssuesContributorsWeb.Utils
-
-  alias GhIssuesContributors.Adapters.Github.Service, as: Github
 
   require Logger
 
@@ -18,7 +17,7 @@ defmodule GhIssuesContributorsWeb.IssuesController do
   - `repo` (string, required): The repository name.
 
   ## Responses
-  - `200`: A JSON object containing issues and contributors.
+  - `202`: Accepted response indicating the process is running.
   - `401`: Unauthorized request if authentication fails.
   """
   operation(:index,
@@ -46,28 +45,22 @@ defmodule GhIssuesContributorsWeb.IssuesController do
     ],
     responses:
       [
+        accepted: {"Processing started", "application/json", GhIssuesContributorsSchema.GhIssuesContributorsResponse},
         ok: {"Successful response", "application/json", GhIssuesContributorsSchema.GhIssuesContributorsResponse}
       ] ++ Response.errors([:unauthorized])
   )
 
   @spec index(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def index(conn, %{"owner" => owner, "repo" => repo}) do
-    case Github.fetch_issues_and_contributors(owner, repo) do
-      {:ok, %{issues: issues, contributors: contributors}} ->
-        data = %{
-          user: owner,
-          repository: repo,
-          issues: issues,
-          contributors: contributors
-        }
-        RememberMe.guard(Utils.cache_key(conn), data, min: 10)
-        json(conn, data)
+    id_webhook = get_req_header(conn, "x-id-webhook")
+    key = Utils.cache_key(conn)
 
-      {:error, reason} ->
-        Logger.error("Failed to fetch issues and contributors: #{reason}")
-        conn
-        |> send_resp(404, "Failed to fetch issues and contributors")
-        |> halt()
-    end
+    Task.start(fn ->
+      ProcessRequest.process_issues_and_contributors(owner, repo, id_webhook, key)
+    end)
+
+    conn
+    |> send_resp(202, "Processing started")
+    |> halt()
   end
 end
