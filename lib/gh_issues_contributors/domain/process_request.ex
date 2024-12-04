@@ -46,7 +46,7 @@ defmodule GhIssuesContributors.Domain.ProcessRequest do
           contributors: contributors
         }
 
-        min = String.to_integer(System.get_env("CACHED_DATA", "5"))
+        min = String.to_integer(System.get_env("CACHED_DATA_MIN", "5"))
         message = "Successfully fetched issues and contributors for #{repo}."
 
         RememberMe.guard(key, %{data: data, message: message, id_webhook: id_webhook}, min: min)
@@ -64,7 +64,7 @@ defmodule GhIssuesContributors.Domain.ProcessRequest do
           message: "Failed to fetch issues and contributors: #{reason}"
         }
 
-        min = String.to_integer(System.get_env("CACHED_DATA", "5"))
+        min = String.to_integer(System.get_env("CACHED_DATA_MIN", "5"))
         message = "Failed to fetch issues and contributors for #{repo}."
 
         RememberMe.guard(key, %{data: error_data, message: message, id_webhook: id_webhook}, min: min)
