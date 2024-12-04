@@ -41,6 +41,7 @@ defmodule GhIssuesContributors.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:remember_me, "~> 0.0.2"},
+      {:mox, "~> 1.0", only: :test},
       {:dns_cluster, "~> 0.1.1"},
       {:httpoison, "~> 2.2"},
       {:bandit, "~> 1.5"},

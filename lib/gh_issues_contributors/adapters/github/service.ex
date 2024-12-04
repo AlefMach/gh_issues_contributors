@@ -5,22 +5,24 @@ defmodule GhIssuesContributors.Adapters.Github.Service do
   @github_api_url "https://api.github.com/repos"
   @github_token System.get_env("GITHUB_TOKEN")
 
+  @behaviour GhIssuesContributors.Adapters.Github.ServiceBehaviour
+
   @spec fetch_issues_and_contributors(any(), any()) ::
           {:error, <<_::64, _::_*8>>}
           | {:ok,
              %{contributors: list() | {:error, <<_::224>>}, issues: list() | {:error, <<_::176>>}}}
   @doc """
-  Busca as issues e os contribuidores de um repositório no GitHub, filtrando as issues
-  criadas nas últimas 24 horas e os contribuidores que realizaram commits nesse intervalo.
+  Fetches the issues and contributors of a GitHub repository, filtering for issues created
+  in the last 24 hours and contributors who have committed during this timeframe.
 
-  ## Parâmetros:
-    - owner: Nome do proprietário do repositório.
-    - repo: Nome do repositório.
+  ## Parameters:
+    - owner: The repository owner's name.
+    - repo: The repository's name.
 
-  ## Retorna:
-    - {:ok, %{issues: issues, contributors: contributors}} em caso de sucesso, onde issues
-      é uma lista de issues e contributors é uma lista de contribuintes.
-    - {:error, reason} em caso de falha.
+  ## Returns:
+    - {:ok, %{issues: issues, contributors: contributors}} on success, where `issues` is
+      a list of issues and `contributors` is a list of contributors.
+    - {:error, reason} on failure.
   """
   def fetch_issues_and_contributors(owner, repo) do
     issues_url = "#{@github_api_url}/#{owner}/#{repo}/issues"

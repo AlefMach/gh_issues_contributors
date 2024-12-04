@@ -1,41 +1,38 @@
 defmodule GhIssuesContributors.Domain.ProcessRequest do
-  alias GhIssuesContributors.Adapters.WebhookSite.Service, as: Webhook
-  alias GhIssuesContributors.Adapters.Github.Service, as: Github
-
-  require Logger
-
   @moduledoc """
-  Módulo responsável por processar as issues e contribuições de um repositório do GitHub.
+  Module responsible for processing issues and contributions from a GitHub repository.
 
-  Este módulo realiza a seguinte sequência de operações:
-  1. Busca as issues e contribuintes de um repositório GitHub.
-  2. Se os dados forem encontrados com sucesso, armazena os dados em cache e envia um webhook com o resultado.
-  3. Se ocorrer um erro ao buscar os dados, armazena a falha em cache e envia um webhook com uma mensagem de erro.
+  This module performs the following sequence of operations:
+  1. Fetches the issues and contributors of a GitHub repository.
+  2. If the data is successfully retrieved, it caches the data and sends a webhook with the result.
+  3. If an error occurs while fetching the data, it caches the failure and sends a webhook with an error message.
 
-  ## Funções
+  ## Functions
 
-    - `process_issues_and_contributors/4`: Processa as issues e contribuições de um repositório, faz o cache dos dados e envia a resposta via webhook.
+    - `process_issues_and_contributors/4`: Processes the issues and contributions of a repository, caches the data, and sends the response via webhook.
   """
 
+  alias GhIssuesContributors.Adapters.WebhookSite.Service, as: Webhook
+  alias GhIssuesContributors.Adapters.Github.Service, as: Github
   require Logger
 
   @doc """
-  Processa as issues e contribuições de um repositório GitHub.
+  Processes the issues and contributions of a GitHub repository.
 
-  Esta função realiza as seguintes etapas:
-  1. Busca as issues e contribuições do repositório no GitHub.
-  2. Se os dados forem encontrados com sucesso, os armazena em cache e envia um webhook.
-  3. Se ocorrer um erro na busca, armazena uma falha em cache e envia um webhook com a mensagem de erro.
+  This function performs the following steps:
+  1. Fetches the repository's issues and contributions from GitHub.
+  2. If the data is successfully retrieved, it caches the data and sends a webhook.
+  3. If an error occurs during the fetch, it caches the failure and sends a webhook with an error message.
 
-  ## Parâmetros
-    - `owner` (string): O dono do repositório GitHub.
-    - `repo` (string): O nome do repositório GitHub.
-    - `id_webhook` (string): O identificador do webhook para enviar a resposta.
-    - `key` (string): A chave para o cache.
+  ## Parameters
+    - `owner` (string): The owner of the GitHub repository.
+    - `repo` (string): The name of the GitHub repository.
+    - `id_webhook` (string): The identifier of the webhook to send the response.
+    - `key` (string): The key for caching.
 
-  ## Retorno
-  - `:ok` se o processo for bem-sucedido.
-  - `{:error, reason}` caso ocorra um erro.
+  ## Return
+    - `:ok` if the process is successful.
+    - `{:error, reason}` if an error occurs.
   """
   def process_issues_and_contributors(owner, repo, id_webhook, key) do
     Logger.info("[ProcessRequest] Iniciando o processamento das issues e contribuições para o repositório #{repo}.")

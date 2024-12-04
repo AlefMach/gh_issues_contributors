@@ -1,39 +1,37 @@
 defmodule GhIssuesContributors.Adapters.WebhookSite.Service do
+  @moduledoc """
+  Module responsible for sending responses to the Webhook via HTTP.
+
+  This module uses the `HTTPoison` library to send data to a given webhook, with a configured
+  timeout to prevent the application from being indefinitely blocked while waiting for a response.
+
+  ## Functions
+
+    - `send_webhook_response/3`: Sends data to a webhook via an HTTP POST request.
+  """
   require Logger
 
-  # Define o tempo de timeout para a requisição e o recebimento de dados.
   @timeout 30_000
   @recv_timeout 30_000
 
-  @moduledoc """
-  Módulo responsável por enviar respostas para o Webhook via HTTP.
-
-  Este módulo utiliza a biblioteca `HTTPoison` para enviar dados para um webhook
-  fornecido, com um tempo de timeout configurado para evitar que a aplicação
-  fique bloqueada indefinidamente esperando pela resposta.
-
-  ## Funções
-
-    - `send_webhook_response/3`: Envia dados para um webhook via requisição HTTP POST.
-  """
+  @behaviour GhIssuesContributors.Adapters.WebhookSite.ServiceBehaviour
 
   @doc """
-  Envia dados para um webhook via requisição HTTP POST.
+  Sends data to a webhook via an HTTP POST request.
 
-  Esta função envia os dados para a URL do webhook, passando um payload JSON e
-  definindo os headers apropriados. O tempo de timeout da requisição e o tempo
-  de espera para o recebimento da resposta são configurados conforme os valores
-  definidos no módulo.
+  This function sends the data to the webhook URL, passing a JSON payload and
+  setting the appropriate headers. The request timeout and the response wait time
+  are configured according to the values defined in the module.
 
-  ## Parâmetros
+  ## Parameters
 
-    - `id` (string): O identificador único do webhook, usado para construir a URL.
-    - `data` (map): Os dados que serão enviados no corpo da requisição, que são codificados como JSON.
-    - `log_message` (string): A mensagem a ser registrada nos logs em caso de sucesso.
+    - `id` (string): The unique identifier of the webhook, used to build the URL.
+    - `data` (map): The data to be sent in the request body, encoded as JSON.
+    - `log_message` (string): The message to log in case of success.
 
-  ## Retorno
-    - Em caso de sucesso (`{:ok, %HTTPoison.Response{status_code: 200}}`), a função registra uma mensagem de log informando o sucesso.
-    - Em caso de erro, um log de erro é registrado com a razão do erro.
+  ## Return
+    - On success (`{:ok, %HTTPoison.Response{status_code: 200}}`), the function logs a success message.
+    - On failure, an error log is recorded with the reason for the error.
   """
   def send_webhook_response(id, data, log_message) do
     webhook_url = "#{System.get_env("SITE_WEBHOOK", "https://webhook.site")}/#{id}"
