@@ -19,7 +19,7 @@ defmodule GhIssuesContributorsWeb.Swagger.Response do
     errors = %{
       not_found: {"Not found, inexistent ID", "application/json", Error.GenericError},
       unauthorized:
-        {"Unauthorized access. Invalid/missing API key or JWT token", "application/json",
+        {"Unauthorized access. Invalid/missing API key", "application/json",
          Error.Unauthorized},
       forbidden: {"Access Denied", "application/json", Error.Forbidden},
       unprocessable_entity: {"Unprocessable Entity", "application/json", Error.UnprocessableEntityError},

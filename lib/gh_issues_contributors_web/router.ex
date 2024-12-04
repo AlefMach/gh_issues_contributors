@@ -17,7 +17,7 @@ defmodule GhIssuesContributorsWeb.Router do
   end
 
   scope "/api/v1", GhIssuesContributorsWeb do
-    pipe_through :api
+    pipe_through [:api, GhIssuesContributorsWeb.Plugs.AuthHeaderCheck, GhIssuesContributorsWeb.Plugs.Cache]
 
     get("/github/:owner/:repo", IssuesController, :index)
   end

@@ -4,8 +4,8 @@ defmodule GhIssuesContributorsWeb.IssuesController do
 
   alias GhIssuesContributorsWeb.Swagger.Schemas.GhIssuesContributorsSchema
   alias GhIssuesContributorsWeb.Swagger.Response
-
-  action_fallback(GhIssuesContributorsWeb.Fallback)
+  alias GhIssuesContributors.Domain.ProcessRequest
+  alias GhIssuesContributorsWeb.Utils
 
   require Logger
 
@@ -17,7 +17,7 @@ defmodule GhIssuesContributorsWeb.IssuesController do
   - `repo` (string, required): The repository name.
 
   ## Responses
-  - `200`: A JSON object containing issues and contributors.
+  - `202`: Accepted response indicating the process is running.
   - `401`: Unauthorized request if authentication fails.
   """
   operation(:index,
@@ -45,12 +45,22 @@ defmodule GhIssuesContributorsWeb.IssuesController do
     ],
     responses:
       [
+        accepted: {"Processing started", "application/json", GhIssuesContributorsSchema.GhIssuesContributorsResponse},
         ok: {"Successful response", "application/json", GhIssuesContributorsSchema.GhIssuesContributorsResponse}
       ] ++ Response.errors([:unauthorized])
   )
-  def index(conn, %{"owner" => _owner, "repo" => _repo}) do
-    # Implementação futura do serviço de busca de issues e contribuidores.
-    # Esta função deve chamar um serviço que utiliza a API do GitHub.
-    json(conn, %{message: "Not implemented yet"})
+
+  @spec index(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def index(conn, %{"owner" => owner, "repo" => repo}) do
+    id_webhook = get_req_header(conn, "x-id-webhook")
+    key = Utils.cache_key(conn)
+
+    Task.start(fn ->
+      ProcessRequest.process_issues_and_contributors(owner, repo, id_webhook, key)
+    end)
+
+    conn
+    |> send_resp(202, "Processing started")
+    |> halt()
   end
 end
