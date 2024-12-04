@@ -6,7 +6,7 @@ defmodule GhIssuesContributorsWeb.IssuesController do
   alias GhIssuesContributorsWeb.Swagger.Response
   alias GhIssuesContributorsWeb.Utils
 
-  action_fallback(GhIssuesContributorsWeb.Fallback)
+  alias GhIssuesContributors.Adapters.Github.Service, as: Github
 
   require Logger
 
@@ -49,8 +49,25 @@ defmodule GhIssuesContributorsWeb.IssuesController do
         ok: {"Successful response", "application/json", GhIssuesContributorsSchema.GhIssuesContributorsResponse}
       ] ++ Response.errors([:unauthorized])
   )
-  def index(conn, %{"owner" => _owner, "repo" => _repo}) do
-    RememberMe.guard(Utils.cache_key(conn), %{teste: "ok"}, min: 10)
-    json(conn, %{message: "Not implemented yet"})
+
+  @spec index(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def index(conn, %{"owner" => owner, "repo" => repo}) do
+    case Github.fetch_issues_and_contributors(owner, repo) do
+      {:ok, %{issues: issues, contributors: contributors}} ->
+        data = %{
+          user: owner,
+          repository: repo,
+          issues: issues,
+          contributors: contributors
+        }
+        RememberMe.guard(Utils.cache_key(conn), data, min: 10)
+        json(conn, data)
+
+      {:error, reason} ->
+        Logger.error("Failed to fetch issues and contributors: #{reason}")
+        conn
+        |> send_resp(404, "Failed to fetch issues and contributors")
+        |> halt()
+    end
   end
 end
