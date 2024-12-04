@@ -59,7 +59,7 @@ defmodule GhIssuesContributorsWeb.IssuesControllerTest do
         "contributors" => []
       }
 
-      assert json_response(response, 200)
+      assert json_response(response, 400)
 
       assert response.resp_body == Jason.encode!(expected_response)
     end
