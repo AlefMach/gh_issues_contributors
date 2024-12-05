@@ -72,6 +72,23 @@
 - **Timeouts**: The module uses configurable timeouts for HTTP requests (`@timeout`, `@recv_timeout`).
 - **Mocks**: The system uses `Mox` for testing dependencies like GitHub and Webhook services.
 
+### Headers
+
+To communicate with the API, you must include the following mandatory headers in your requests:
+
+- **`x-gh-auth`**: Generic authentication header. Can contain any value for testing or API integration purposes.
+
+- **`x-id-webhook`**: Unique identifier for the webhook site. Ex: `https://webhook.site/dee6f722-4d56-44fa-b6af-7c29e9ed6206`, you will use  `dee6f722-4d56-44fa-b6af-7c29e9ed6206`
+
+Example of configuring headers in a request:
+
+```elixir
+headers = [
+  {"x-gh-auth", "any_value_for_authentication"},
+  {"x-id-webhook", "webhook_id"}
+]
+```
+
 ## Testing
 
 Run the unit tests to verify the application's functionality:
