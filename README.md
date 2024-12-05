@@ -15,7 +15,7 @@
 1. Clone the repository:
 
    ```bash
-   git clonehttps://github.com/AlefMach/gh_issues_contributors.git
+   git clone https://github.com/AlefMach/gh_issues_contributors.git
    cd gh_issues_contributors
    ```
 
