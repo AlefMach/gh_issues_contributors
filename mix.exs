@@ -45,7 +45,8 @@ defmodule GhIssuesContributors.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:httpoison, "~> 2.2"},
       {:bandit, "~> 1.5"},
-      {:open_api_spex, "~> 3.21"}
+      {:open_api_spex, "~> 3.21"},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end
 

@@ -6,7 +6,7 @@ services:
       context: .
       target: build
       args:
-        MIX_ENV: prod
+        MIX_ENV: ${MIX_ENV}
     container_name: gh_issues_contributors
     command: iex -S mix phx.server
     restart: unless-stopped
