@@ -13,7 +13,7 @@ config :gh_issues_contributors, GhIssuesContributors.Mailer, adapter: Swoosh.Ada
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 
-config :sysaud, GhIssuesContributors.Repo,
+config :gh_issues_contributors, GhIssuesContributors.Repo,
   username:  "admin",
   password: "admin",
   hostname: "db_test",
