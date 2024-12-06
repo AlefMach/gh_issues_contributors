@@ -5,7 +5,6 @@
 ## Features
 
 - Fetches issues and contributors from GitHub repositories.
-- Filters issues and contributors based on specific timeframes (e.g., last 24 hours).
 - Caches retrieved data for performance and reliability.
 - Sends results or error messages to a configurable webhook via HTTP.
 - Modular and testable with dependency mocks and robust unit tests.
