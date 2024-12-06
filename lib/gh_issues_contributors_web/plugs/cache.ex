@@ -79,13 +79,12 @@ defmodule GhIssuesContributorsWeb.Plugs.Cache do
   end
 
   defp schedule_job(id_webhook, data, message) do
-    changeset = SendWebhookDelayed.new(%{
+    %{
       id_webhook: id_webhook,
       data: data,
       message: message
-    })
-
-    SendWebhookDelayed
-    |> Oban.insert(changeset, schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+    }
+    |> SendWebhookDelayed.new()
+    |> Oban.insert(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
   end
 end

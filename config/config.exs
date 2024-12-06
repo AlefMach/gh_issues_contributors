@@ -10,8 +10,7 @@ import Config
 config :gh_issues_contributors, Oban,
     repo: GhIssuesContributors.Repo,
     plugins: [{Oban.Plugins.Pruner, max_age: String.to_integer(System.get_env("SCHEDULE_MESSAGE_WEBHOOK", "86400"))}],
-    queues: [webhook: 10],
-    testing: :inline
+    queues: [webhook: 10]
 
 config :gh_issues_contributors,
   generators: [timestamp_type: :utc_datetime]

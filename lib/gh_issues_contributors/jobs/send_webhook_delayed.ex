@@ -26,7 +26,7 @@ defmodule GhIssuesContributors.Jobs.SendWebhookDelayed do
   def perform(%Oban.Job{args: %{"id_webhook" => id_webhook, "data" => data, "message" => message}}) do
     case Webhook.send_webhook_response(id_webhook, data, message) do
       :ok ->
-        Logger.info("[SendWebhookDelayed] - data: #{IO.inspect(data)} sent with success - id_webhook: #{id_webhook}")
+        Logger.info("[SendWebhookDelayed] - data: #{inspect(data)} sent with success - id_webhook: #{id_webhook}")
         :ok
 
       {:error, reason} ->
