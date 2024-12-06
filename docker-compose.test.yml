@@ -14,7 +14,7 @@ services:
     volumes:
       - .:/app
     command: >
-      sh -c "mix deps.get && mix test --trace" 
+      sh -c "mix deps.get && mix ecto.gen.migration add_oban_jobs_table && mix ecto.migrate && mix test --trace" 
     networks:
       - admin
 
