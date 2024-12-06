@@ -107,7 +107,7 @@ defmodule GhIssuesContributors.Domain.ProcessRequest do
       message: "Failed to fetch issues and contributors: #{reason}"
     }
   end
-  
+
   defp get_cache_time do
     String.to_integer(System.get_env("CACHED_DATA_MIN", "5"))
   end
