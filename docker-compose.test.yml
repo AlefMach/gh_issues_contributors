@@ -1,5 +1,5 @@
 services:
-  gh_issues_contributors_backend_test:
+  gh_issues_contributors_test:
     build:
       context: .
       dockerfile: Dockerfile.test
@@ -14,7 +14,7 @@ services:
     volumes:
       - .:/app
     command: >
-      sh -c "mix deps.get && mix ecto.gen.migration add_oban_jobs_table && mix ecto.migrate && mix test --trace" 
+      sh -c "mix deps.get && mix ecto.migrate && mix test --trace" 
     networks:
       - admin
 
