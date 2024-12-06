@@ -7,7 +7,17 @@
 # General application configuration
 import Config
 
+config :gh_issues_contributors, Oban,
+    repo: GhIssuesContributors.Repo,
+    plugins: [{Oban.Plugins.Pruner, max_age: String.to_integer(System.get_env("SCHEDULE_MESSAGE_WEBHOOK", "86400"))}],
+    queues: [webhook: 10],
+    testing: :inline
+
 config :gh_issues_contributors,
+  generators: [timestamp_type: :utc_datetime]
+
+config :gh_issues_contributors,
+  ecto_repos: [GhIssuesContributors.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
@@ -20,6 +30,8 @@ config :gh_issues_contributors, GhIssuesContributorsWeb.Endpoint,
   ],
   pubsub_server: GhIssuesContributors.PubSub,
   live_view: [signing_salt: "OMmoivLl"]
+
+config :gh_issues_contributors, :delay, String.to_integer(System.get_env("SCHEDULE_MESSAGE_WEBHOOK", "86400")) # 1 day in seconds
 
 # Configures the mailer
 #

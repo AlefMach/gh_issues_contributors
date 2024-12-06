@@ -5,7 +5,7 @@ defmodule GhIssuesContributors.MixProject do
     [
       app: :gh_issues_contributors,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -42,11 +42,13 @@ defmodule GhIssuesContributors.MixProject do
       {:jason, "~> 1.2"},
       {:remember_me, "~> 0.0.2"},
       {:mox, "~> 1.0", only: :test},
+      {:oban, "~> 2.18"},
       {:dns_cluster, "~> 0.1.1"},
       {:httpoison, "~> 2.2"},
       {:bandit, "~> 1.5"},
       {:open_api_spex, "~> 3.21"},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:postgrex, "~> 0.15"}
     ]
   end
 

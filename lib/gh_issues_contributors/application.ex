@@ -11,8 +11,10 @@ defmodule GhIssuesContributors.Application do
       GhIssuesContributorsWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:gh_issues_contributors, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: GhIssuesContributors.PubSub},
+      GhIssuesContributors.Repo,
       # Start the Finch HTTP client for sending emails
       {Finch, name: GhIssuesContributors.Finch},
+      {Oban, Application.fetch_env!(:gh_issues_contributors, Oban)},
       # Start a worker by calling: GhIssuesContributors.Worker.start_link(arg)
       # {GhIssuesContributors.Worker, arg},
       # Start to serve requests, typically the last entry
