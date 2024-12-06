@@ -4,12 +4,48 @@ services:
       context: .
       dockerfile: Dockerfile.test
       args:
-        MIX_ENV: ${MIX_ENV}
+        MIX_ENV: test
     environment:
       MIX_ENV: test
     env_file:
       - .env.test
+    depends_on:
+      - db_test
     volumes:
       - .:/app
     command: >
       sh -c "mix deps.get && mix test --trace" 
+    networks:
+      - admin_test
+
+  db_test:
+    image: postgres:13.5
+    container_name: gh_issues_contributors_test
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: gh_issues_contributors_dev
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - admin_test
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+networks:
+  admin:
+    name: admin_test
+
+volumes:
+  postgres_test_data:

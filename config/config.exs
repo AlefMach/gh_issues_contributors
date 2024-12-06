@@ -10,6 +10,14 @@ import Config
 config :gh_issues_contributors,
   generators: [timestamp_type: :utc_datetime]
 
+config :gh_issues_contributors,
+  ecto_repos: [GhIssuesContributors.Repo],
+  generators: [timestamp_type: :utc_datetime]
+
+config :gh_issues_contributors, Oban,
+  repo: GhIssuesContributors.Repo,
+  queues: [webhook: 10]
+
 # Configures the endpoint
 config :gh_issues_contributors, GhIssuesContributorsWeb.Endpoint,
   url: [host: "localhost"],

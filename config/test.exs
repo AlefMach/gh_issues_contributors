@@ -13,6 +13,15 @@ config :gh_issues_contributors, GhIssuesContributors.Mailer, adapter: Swoosh.Ada
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 
+config :sysaud, GhIssuesContributors.Repo,
+  username:  "admin",
+  password: "admin",
+  hostname: "db_test",
+  database: "gh_issues_contributors_dev",
+  port: 5432,
+  pool: Ecto.Adapters.SQL.Sandbox,
+  pool_size: System.schedulers_online() * 2
+
 # Print only warnings and errors during test
 config :logger, level: :warning
 

@@ -38,6 +38,17 @@ if config_env() == :prod do
 
   config :gh_issues_contributors, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  config :gh_issues_contributors, GhIssuesContributors.Repo,
+    username: System.get_env("DATABASE_USERNAME"),
+    password: System.get_env("DATABASE_PASSWORD"),
+    hostname: System.get_env("DATABASE_HOSTNAME"),
+    database: System.get_env("DATABASE_NAME"),
+    port: System.get_env("DATABASE_PORT"),
+    stacktrace: true,
+    show_sensitive_data_on_connection_error: true,
+    pool_size: 10
+
+
   config :gh_issues_contributors, GhIssuesContributorsWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
