@@ -23,15 +23,16 @@ defmodule GhIssuesContributors.Jobs.SendWebhookDelayed do
   #   - `:ok` if the webhook was sent successfully.
   #   - `{:error, reason}` if an error occurred, causing Oban to retry after 5 seconds.
 
+  @spec perform(Oban.Job.t()) :: :ok | {:error, any()}
   def perform(%Oban.Job{args: %{"id_webhook" => id_webhook, "data" => data, "message" => message}}) do
     case Webhook.send_webhook_response(id_webhook, data, message) do
       :ok ->
         Logger.info("[SendWebhookDelayed] - data: #{inspect(data)} sent with success - id_webhook: #{id_webhook}")
         :ok
 
-      {:error, reason} ->
+      {:error, reason} = error ->
         Logger.error("[SendWebhookDelayed] - Error sending webhook: #{inspect(reason)}")
-        {:retry, 5000}
+        error
     end
   end
 end

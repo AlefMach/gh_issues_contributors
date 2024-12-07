@@ -84,7 +84,7 @@ defmodule GhIssuesContributorsWeb.Plugs.Cache do
       data: data,
       message: message
     }
-    |> SendWebhookDelayed.new()
-    |> Oban.insert(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+    |> SendWebhookDelayed.new(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+    |> Oban.insert()
   end
 end

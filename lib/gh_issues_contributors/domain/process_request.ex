@@ -63,8 +63,8 @@ defmodule GhIssuesContributors.Domain.ProcessRequest do
           data: data,
           message: message
         }
-        |> SendWebhookDelayed.new()
-        |> Oban.insert(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+        |> SendWebhookDelayed.new(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+        |> Oban.insert()
 
         Logger.info("[ProcessRequest] Issues and contributors for #{repo} successfully processed and sent to the webhook.")
 
@@ -82,8 +82,8 @@ defmodule GhIssuesContributors.Domain.ProcessRequest do
           data: error_data,
           message: message
         }
-        |> SendWebhookDelayed.new()
-        |> Oban.insert(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+        |> SendWebhookDelayed.new(schedule_in: Application.get_env(:gh_issues_contributors, :delay))
+        |> Oban.insert()
 
         Logger.error("[ProcessRequest] Failed to fetch issues and contributors for #{repo}: #{inspect(reason)}")
     end
