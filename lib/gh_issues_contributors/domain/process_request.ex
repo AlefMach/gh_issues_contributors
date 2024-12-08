@@ -39,7 +39,6 @@ defmodule GhIssuesContributors.Domain.ProcessRequest do
 
   ## Return
     - `:ok` if the process is successful, meaning the data was fetched and the webhook was sent.
-    - `{:error, reason}` if an error occurs, meaning the issues and contributors could not be fetched.
 
   ## Example
 
